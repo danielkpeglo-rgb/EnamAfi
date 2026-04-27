@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mv 372baeb9-18d7-4ef6-90d3-7bf31ae67052.jpeg afi-coupe-afrique-conakry-bw-1.jpg)",
+      "Bash(mv 3cb66e95-96f0-437e-8d88-a6691fb3a430.jpeg afi-intimate-performance.jpg)",
+      "Bash(mv 73bf6ea9-b6da-4f20-8f3e-86d6a19688ed.jpeg afi-stage-lit-performance.jpg)",
+      "Bash(mv 7a93a392-1b44-4c3e-9e30-81ead534e1fa.jpeg afi-womens-festival.jpg)",
+      "Bash(mv 8fced196-856a-4eb8-897b-b79c8d2f7c16.jpeg afi-coupe-afrique-stage-bw.jpg)",
+      "Bash(mkdir -p \"c:/Users/HP/Desktop/Enam/images/performance\" \"c:/Users/HP/Desktop/Enam/images/fashion\")",
+      "Bash(mv afi-coupe-afrique-throwback-bw.jpg afi-coupe-afrique-conakry-bw-1.jpg afi-coupe-afrique-stage-bw.jpg afi-stage-lit-performance.jpg afi-womens-festival.jpg afi-mic-profile-closeup.jpg afi-mic-moment-braids.jpg afi-intimate-performance.jpg afi-creatives-project-ghana.jpg afi-ghana-flag-champions.jpg afi-medal-ceremony.jpg afi-performance.jpg afi-backstage-smile-bw.jpg performance/)"
+    ]
+  }
+}
