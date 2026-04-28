@@ -11,11 +11,18 @@ document.getElementById('year').textContent = new Date().getFullYear();
 const progressBar = document.getElementById('scroll-progress');
 const nav = document.querySelector('nav');
 
+const backToTopBtn = document.getElementById('back-to-top');
+
 window.addEventListener('scroll', () => {
   const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
   progressBar.style.width = pct + '%';
   nav.classList.toggle('scrolled', window.scrollY > 60);
+  if (backToTopBtn) backToTopBtn.classList.toggle('visible', window.scrollY > 400);
 }, { passive: true });
+
+backToTopBtn?.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
 
 // ── Hero parallax ────────────────────────────────────────────────────────
 const heroVisual = document.querySelector('.hero-visual');
@@ -63,29 +70,86 @@ document.querySelectorAll('.gallery-item').forEach((item, i) => {
   galleryObs.observe(item);
 });
 
+// ── Gallery: expand / collapse ───────────────────────────────────────────
+const PREVIEW_COUNT = 6;
+let galleryExpanded = false;
+const expandArea  = document.getElementById('gallery-expand-area');
+const expandBtn   = document.getElementById('gallery-expand-btn');
+const showLessBtn = document.getElementById('gallery-show-less');
+
+function getAllGalleryItems() {
+  return Array.from(document.querySelectorAll('.gallery-item'));
+}
+
+function triggerGalleryIn(items) {
+  items.forEach((item, i) => {
+    item.classList.remove('gallery-in');
+    item.style.transitionDelay = (i % 3) * 0.07 + 's';
+    requestAnimationFrame(() => requestAnimationFrame(() => item.classList.add('gallery-in')));
+  });
+}
+
+function applyGalleryState(activeTab) {
+  const allItems = getAllGalleryItems();
+
+  if (activeTab !== 'all') {
+    allItems.forEach(item => {
+      item.classList.remove('gallery-collapsed');
+      item.classList.toggle('hidden', item.dataset.category !== activeTab);
+    });
+    if (expandArea) expandArea.style.display = 'none';
+    return;
+  }
+
+  // "All" tab: clear hidden flags, apply preview collapse
+  allItems.forEach(item => item.classList.remove('hidden'));
+  if (expandArea) expandArea.style.display = '';
+
+  let shown = 0;
+  allItems.forEach(item => {
+    if (!galleryExpanded && shown >= PREVIEW_COUNT) {
+      item.classList.add('gallery-collapsed');
+    } else {
+      item.classList.remove('gallery-collapsed');
+      shown++;
+    }
+  });
+
+  const total = allItems.length;
+  if (expandBtn) {
+    expandBtn.textContent = `View All ${total} Works →`;
+    expandBtn.style.display = galleryExpanded ? 'none' : '';
+  }
+  if (showLessBtn) showLessBtn.style.display = galleryExpanded ? '' : 'none';
+}
+
 // ── Gallery: tab filtering ───────────────────────────────────────────────
 document.querySelectorAll('.gallery-tab').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.gallery-tab').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
     const filter = tab.dataset.tab;
-    let delay = 0;
-
-    document.querySelectorAll('.gallery-item').forEach(item => {
-      const matches = filter === 'all' || item.dataset.category === filter;
-      if (!matches) {
-        item.classList.remove('gallery-in');
-        item.classList.add('hidden');
-      } else {
-        item.classList.remove('hidden');
-        item.style.transitionDelay = (delay * 0.07) + 's';
-        delay++;
-        // double rAF ensures browser registers the initial state first
-        requestAnimationFrame(() => requestAnimationFrame(() => item.classList.add('gallery-in')));
-      }
-    });
+    applyGalleryState(filter);
+    const visible = document.querySelectorAll('.gallery-item:not(.hidden):not(.gallery-collapsed)');
+    triggerGalleryIn(Array.from(visible));
   });
 });
+
+expandBtn?.addEventListener('click', () => {
+  galleryExpanded = true;
+  applyGalleryState('all');
+  const newItems = document.querySelectorAll('.gallery-item:not(.gallery-collapsed):not(.gallery-in)');
+  triggerGalleryIn(Array.from(newItems));
+});
+
+showLessBtn?.addEventListener('click', () => {
+  galleryExpanded = false;
+  applyGalleryState('all');
+  document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
+});
+
+// Initialise preview on page load
+applyGalleryState('all');
 
 // ── Gallery: 3D tilt on mouse move ───────────────────────────────────────
 document.querySelectorAll('.gallery-item').forEach(item => {
@@ -110,7 +174,7 @@ const lbTitle   = lightbox.querySelector('.lightbox-title');
 let lbItems = [], lbIndex = 0;
 
 function getVisibleItems() {
-  return Array.from(document.querySelectorAll('.gallery-item:not(.hidden)'));
+  return Array.from(document.querySelectorAll('.gallery-item:not(.hidden):not(.gallery-collapsed)'));
 }
 function loadLightboxItem(index) {
   lbIndex = index;
