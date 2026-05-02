@@ -276,7 +276,7 @@ document.getElementById('perf-next')?.addEventListener('click', () => {
   }, 340);
 });
 
-perfForm?.addEventListener('submit', e => {
+perfForm?.addEventListener('submit', async e => {
   e.preventDefault();
   let valid = true;
   perfForm.querySelectorAll('[required]').forEach(f => {
@@ -284,11 +284,34 @@ perfForm?.addEventListener('submit', e => {
     if (!f.value.trim()) valid = false;
   });
   if (!valid) return;
-  perfForm.style.opacity = '0';
-  setTimeout(() => {
-    perfForm.classList.add('hidden');
-    if (perfSuccess) perfSuccess.classList.remove('hidden');
-  }, 400);
+
+  const submitBtn = perfForm.querySelector('.form-submit-btn');
+  const originalText = submitBtn.textContent;
+  submitBtn.textContent = 'Sending…';
+  submitBtn.disabled = true;
+
+  try {
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      body: new FormData(perfForm)
+    });
+    const data = await res.json();
+    if (data.success) {
+      perfForm.style.opacity = '0';
+      setTimeout(() => {
+        perfForm.classList.add('hidden');
+        if (perfSuccess) perfSuccess.classList.remove('hidden');
+      }, 400);
+    } else {
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
+      alert('Something went wrong. Please try again or email directly.');
+    }
+  } catch {
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
+    alert('Network error. Please check your connection and try again.');
+  }
 });
 
 // ── Fashion commission modal ─────────────────────────────────────────────
@@ -319,7 +342,7 @@ document.getElementById('fashion-next')?.addEventListener('click', () => {
   }, 340);
 });
 
-fashionForm?.addEventListener('submit', e => {
+fashionForm?.addEventListener('submit', async e => {
   e.preventDefault();
   let valid = true;
   fashionForm.querySelectorAll('[required]').forEach(f => {
@@ -327,11 +350,34 @@ fashionForm?.addEventListener('submit', e => {
     if (!f.value.trim()) valid = false;
   });
   if (!valid) return;
-  fashionForm.style.opacity = '0';
-  setTimeout(() => {
-    fashionForm.classList.add('hidden');
-    if (fashionSuccess) fashionSuccess.classList.remove('hidden');
-  }, 400);
+
+  const submitBtn = fashionForm.querySelector('.form-submit-btn');
+  const originalText = submitBtn.textContent;
+  submitBtn.textContent = 'Sending…';
+  submitBtn.disabled = true;
+
+  try {
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      body: new FormData(fashionForm)
+    });
+    const data = await res.json();
+    if (data.success) {
+      fashionForm.style.opacity = '0';
+      setTimeout(() => {
+        fashionForm.classList.add('hidden');
+        if (fashionSuccess) fashionSuccess.classList.remove('hidden');
+      }, 400);
+    } else {
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
+      alert('Something went wrong. Please try again or email directly.');
+    }
+  } catch {
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
+    alert('Network error. Please check your connection and try again.');
+  }
 });
 
 // ── Clear error state on input ───────────────────────────────────────────
