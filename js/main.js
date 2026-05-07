@@ -262,7 +262,7 @@ if (perfTrigger) {
     perfIntro.classList.remove('hidden');
     perfFormStep.classList.add('hidden');
     if (perfSuccess) perfSuccess.classList.add('hidden');
-    if (perfForm) { perfForm.classList.remove('hidden'); perfForm.style.opacity = ''; perfForm.reset(); }
+    if (perfForm) { perfForm.style.display = ''; perfForm.style.opacity = ''; perfForm.reset(); }
     openModal(perfModal);
   });
 }
@@ -299,7 +299,7 @@ perfForm?.addEventListener('submit', async e => {
     if (data.success) {
       perfForm.style.opacity = '0';
       setTimeout(() => {
-        perfForm.classList.add('hidden');
+        perfForm.style.display = 'none';
         if (perfSuccess) perfSuccess.classList.remove('hidden');
       }, 400);
     } else {
@@ -328,7 +328,7 @@ if (fashionTrigger) {
     fashionIntro.classList.remove('hidden');
     fashionFormStep.classList.add('hidden');
     if (fashionSuccess) fashionSuccess.classList.add('hidden');
-    if (fashionForm) { fashionForm.classList.remove('hidden'); fashionForm.style.opacity = ''; fashionForm.reset(); }
+    if (fashionForm) { fashionForm.style.display = ''; fashionForm.style.opacity = ''; fashionForm.reset(); }
     openModal(fashionModal);
   });
 }
@@ -365,7 +365,7 @@ fashionForm?.addEventListener('submit', async e => {
     if (data.success) {
       fashionForm.style.opacity = '0';
       setTimeout(() => {
-        fashionForm.classList.add('hidden');
+        fashionForm.style.display = 'none';
         if (fashionSuccess) fashionSuccess.classList.remove('hidden');
       }, 400);
     } else {
