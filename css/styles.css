@@ -1030,7 +1030,7 @@ h2.section-title em {
 }
 .contact-strip-items {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 1px;
   background: rgba(10,8,5,0.15);
   border: 1px solid rgba(10,8,5,0.15);
